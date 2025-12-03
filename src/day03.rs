@@ -44,6 +44,26 @@ fn solve_part1(input: &str) -> String {
 }
 
 fn solve_part2(input: &str) -> String {
-    // TODO: Implement part 2 solution
-    format!("Not implemented yet. Input has {} characters.", input.len())
+    let prob_2_n: usize = 12;
+    let sum = input.lines().map(|bank| {
+        let jolts: Vec<u32> = bank
+            .chars()
+            .map(|c| c.to_digit(10).expect("Malformed input: Char not a digit"))
+            .collect();
+
+        let mut next_idx = 0;
+        let activations: Vec<u32> = (1..=prob_2_n).map(|i| {
+            let sub_vec = &jolts[next_idx..(jolts.len() - (prob_2_n - i))];
+            let (i, &highest) = find_max_indexed(sub_vec).expect("Bank empty?");
+            next_idx += i + 1;
+            highest
+        }).collect();
+        activations
+            .iter()
+            .map(|&i| char::from_digit(i, 10).expect("Can't turn back into char"))
+            .collect::<String>()
+            .parse::<usize>()
+            .expect("Can't turn number string into number")
+    }).sum::<usize>();
+    format!("Total jolts used: {}", sum)
 }
