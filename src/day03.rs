@@ -14,7 +14,7 @@ pub fn solve() {
 }
 
 fn find_max_indexed<T: PartialOrd>(num_array: &[T]) -> Option<(usize, &T)> {
-    let (Some(i), Some(highest)) = num_array
+    let (i, highest) = num_array
         .iter()
         .enumerate()
         .fold((None, None), |(idx, max), (i, curr)| {
@@ -23,10 +23,8 @@ fn find_max_indexed<T: PartialOrd>(num_array: &[T]) -> Option<(usize, &T)> {
             } else {
                 (idx, max)
             }
-    }) else {
-        return None;
-    };
-    Some((i, highest))
+    });
+    i.zip(highest)
 }
 
 fn solve_part(input: &str, battery_count: usize) -> String {
