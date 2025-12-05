@@ -1,5 +1,4 @@
 use core::fmt;
-use std::collections::binary_heap::Iter;
 use std::fs;
 use std::path::Path;
 use std::str::FromStr;
@@ -14,29 +13,6 @@ pub fn read_input(day: u32) -> String {
             "Failed to read input file '{}'. Please ensure the file exists and contains your puzzle input. Error: {}",
             filename, err
         ))
-}
-
-/// Reads the input file for a given day and returns it as a vector of lines.
-pub fn read_lines(day: u32) -> Vec<String> {
-    read_input(day)
-        .lines()
-        .map(String::from)
-        .collect()
-}
-
-/// Reads the input file for a given day and parses each line as the specified type.
-pub fn read_parsed<T>(day: u32) -> Vec<T>
-where
-    T: FromStr,
-    <T as FromStr>::Err: std::fmt::Debug,
-{
-    read_lines(day)
-        .iter()
-        .map(|line| line.parse::<T>().unwrap_or_else(|err| panic!(
-            "Failed to parse line '{}'. Error: {:?}",
-            line, err
-        )))
-        .collect()
 }
 
 pub struct Grid<T> {

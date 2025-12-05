@@ -1,5 +1,3 @@
-use std::{thread::sleep, time::Duration};
-
 use crate::utils::{self, Grid};
 
 pub fn solve() {
