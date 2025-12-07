@@ -49,6 +49,8 @@ impl fmt::Display for Grid<char> {
         write!(f, "{}", s)
     }
 }
+
+#[allow(unused)]
 impl<T> Grid<T> {
     pub fn get(&self, x: usize, y: usize) -> Option<&T> {
         self.grid.get(y)?.get(x)
@@ -60,36 +62,24 @@ impl<T> Grid<T> {
         *(self.get_mut(x, y)?) = new_value;
         Some(())
     }
-    pub fn iter(&self) -> GridIterator<T> {
-        GridIterator {
-            grid: self,
-            x: 0,
-            y: 0,
-        }
+    pub fn iter(&self) -> impl Iterator<Item = (usize, usize, &T)> {
+        self.grid
+            .iter()
+            .enumerate()
+            .flat_map(move |(y, row)| {
+                row.iter()
+                    .enumerate()
+                    .map(move |(x, value)| (x, y, value))
+            })
     }
-}
-
-pub struct GridIterator<'a, T> {
-    grid: &'a Grid<T>,
-    x: usize,
-    y: usize,
-}
-impl<'a, T> Iterator for GridIterator<'a, T> {
-    type Item = (usize, usize, &'a T);
-
-    fn next(&mut self) -> Option<Self::Item> {
-        if self.y >= self.grid.height {
-            return None;
-        }
-
-        let result = self.grid.get(self.x, self.y).map(|value| (self.x, self.y, value));
-
-        self.x += 1;
-        if self.x >= self.grid.width {
-            self.x = 0;
-            self.y += 1;
-        }
-
-        result
+    pub fn iter_mut(&mut self) -> impl Iterator<Item = (usize, usize, &mut T)> {
+        self.grid
+            .iter_mut()
+            .enumerate()
+            .flat_map(move |(y, row)| {
+                row.iter_mut()
+                    .enumerate()
+                    .map(move |(x, value)| (x, y, value))
+            })
     }
 }
